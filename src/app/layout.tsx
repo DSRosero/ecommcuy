@@ -5,6 +5,7 @@ import { CartProvider } from "@/context/cart-context";
 import { Navbar } from "@/components/navbar";
 import { CartDrawer } from "@/components/cart-drawer";
 import { Footer } from "@/components/footer";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
           <CartDrawer />
           <main className="flex-1">{children}</main>
           <Footer />
+          <WhatsAppButton />
         </CartProvider>
       </body>
     </html>
