@@ -10,9 +10,7 @@ import {
   CheckCircle2,
   Lock,
   CreditCard,
-  Building,
   Smartphone,
-  ExternalLink,
 } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { formatCOP } from "@/lib/utils";
@@ -71,9 +69,7 @@ export default function CheckoutPage() {
     if (items.length === 0) return;
 
     setIsSubmitting(true);
-
-    // Simulate order placement / payment gateway token generation
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1400));
 
     const generatedOrderId = `EC-${Math.floor(100000 + Math.random() * 900000)}`;
 
@@ -84,87 +80,75 @@ export default function CheckoutPage() {
       paymentMethod:
         formData.paymentMethod === "mercadopago"
           ? "Mercado Pago (PSE / Tarjetas / Efecty)"
-          : formData.paymentMethod === "wompi"
-          ? "Wompi (Bancolombia / Nequi)"
-          : "Transferencia Directa Bancaria",
+          : "Wompi (Bancolombia / Nequi)",
     });
 
     clearCart();
     setIsSubmitting(false);
   };
 
-  // If order complete screen
   if (orderCompleted) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
-          <CheckCircle2 className="h-10 w-10" />
+      <div className="mx-auto max-w-2xl px-4 py-16 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200">
+          <CheckCircle2 className="h-8 w-8" />
         </div>
 
-        <span className="mt-6 inline-block rounded-full bg-emerald-500/10 px-3 py-1 font-mono text-xs font-semibold text-emerald-400">
-          ¡Orden Registrada con Éxito!
+        <span className="mt-4 inline-block rounded-full bg-zinc-100 px-3 py-1 font-mono text-xs font-semibold text-zinc-700">
+          Pedido Confirmado
         </span>
 
-        <h1 className="mt-3 text-3xl font-extrabold text-white sm:text-4xl">
-          Gracias por tu compra en EcommCuy
+        <h1 className="mt-2 text-3xl font-bold text-zinc-950 sm:text-4xl">
+          ¡Gracias por tu compra!
         </h1>
 
-        <p className="mt-3 text-sm text-zinc-400 max-w-lg mx-auto">
-          Hemos enviado un correo de confirmación a{" "}
-          <strong className="text-zinc-200">{orderCompleted.email}</strong> con los detalles del envío y número de guía.
+        <p className="mt-2 text-sm text-zinc-600 max-w-md mx-auto">
+          Enviamos el comprobante y número de guía a <strong className="text-zinc-900">{orderCompleted.email}</strong>.
         </p>
 
-        {/* Order Card details */}
-        <div className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 text-left space-y-3 font-mono text-sm max-w-md mx-auto">
-          <div className="flex justify-between border-b border-zinc-800 pb-2">
+        <div className="mt-6 rounded-2xl border border-zinc-200 bg-white p-5 text-left space-y-2.5 font-mono text-xs max-w-sm mx-auto shadow-xs">
+          <div className="flex justify-between border-b border-zinc-100 pb-2">
             <span className="text-zinc-500">ID de Orden:</span>
-            <span className="font-bold text-white">{orderCompleted.orderId}</span>
+            <span className="font-bold text-zinc-900">{orderCompleted.orderId}</span>
           </div>
-          <div className="flex justify-between border-b border-zinc-800 pb-2">
+          <div className="flex justify-between border-b border-zinc-100 pb-2">
             <span className="text-zinc-500">Total Facturado:</span>
-            <span className="font-bold text-emerald-400">
+            <span className="font-bold text-zinc-900">
               {formatCOP(orderCompleted.total)}
             </span>
           </div>
-          <div className="flex justify-between border-b border-zinc-800 pb-2">
-            <span className="text-zinc-500">Medio de Pago:</span>
-            <span className="text-zinc-300 text-xs text-right">
-              {orderCompleted.paymentMethod}
-            </span>
-          </div>
-          <div className="flex justify-between text-xs text-zinc-400 pt-1">
-            <span>Estado:</span>
-            <span className="text-emerald-400 font-semibold">Procesando despacho</span>
+          <div className="flex justify-between text-zinc-500">
+            <span>Medio:</span>
+            <span className="text-zinc-800 text-right">{orderCompleted.paymentMethod}</span>
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-3 text-sm font-bold text-zinc-950 transition-all hover:brightness-110"
+            className="inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-5 py-2.5 text-xs font-semibold text-white hover:bg-zinc-800 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Volver a la Tienda</span>
+            <span>Volver al Catálogo</span>
           </Link>
         </div>
       </div>
     );
   }
 
-  // If cart empty
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-24 text-center">
-        <h2 className="text-2xl font-bold text-white">No tienes productos en el carrito</h2>
-        <p className="mt-2 text-sm text-zinc-400">
-          Para realizar un pedido, primero agrega productos desde nuestro catálogo.
+      <div className="mx-auto max-w-xl px-4 py-20 text-center">
+        <h2 className="text-xl font-bold text-zinc-900">Tu carrito está vacío</h2>
+        <p className="mt-1 text-xs text-zinc-500">
+          Agrega productos para proceder al pago.
         </p>
-        <div className="mt-6">
+        <div className="mt-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-emerald-400"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-4 py-2 text-xs font-semibold text-white hover:bg-zinc-800"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-3.5 w-3.5" />
             <span>Ver Catálogo</span>
           </Link>
         </div>
@@ -173,35 +157,34 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      {/* Top back link */}
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <Link
         href="/"
-        className="inline-flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-white transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
-        <span>Continuar explorando productos</span>
+        <span>Volver a la tienda</span>
       </Link>
 
-      <div className="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-12">
-        {/* Left: Form */}
+      <div className="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-12">
+        {/* Form */}
         <div className="lg:col-span-7">
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 sm:p-8">
-            <h1 className="text-2xl font-extrabold text-white">Detalles del Envío</h1>
-            <p className="mt-1 text-xs text-zinc-400">
-              Ingresa los datos para la entrega de tu paquete en Colombia.
+          <div className="rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-xs">
+            <h1 className="text-xl font-bold text-zinc-950">Datos de Entrega</h1>
+            <p className="mt-0.5 text-xs text-zinc-500">
+              Despachamos de forma segura a cualquier municipio de Colombia.
             </p>
 
-            <form onSubmit={handleSubmitOrder} className="mt-6 space-y-6">
-              {/* Contact Info */}
-              <div className="space-y-4">
-                <h3 className="text-xs font-mono uppercase tracking-wider text-emerald-400">
-                  1. Información de Contacto
+            <form onSubmit={handleSubmitOrder} className="mt-6 space-y-5">
+              {/* Contact */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-mono font-semibold uppercase text-zinc-400">
+                  1. Contacto
                 </h3>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-medium text-zinc-300">
+                    <label className="block text-xs font-medium text-zinc-700">
                       Nombre y Apellidos *
                     </label>
                     <input
@@ -210,13 +193,13 @@ export default function CheckoutPage() {
                       required
                       value={formData.fullName}
                       onChange={handleChange}
-                      placeholder="Ej: Daniel Gómez"
-                      className="mt-1.5 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                      placeholder="Daniel Rosero"
+                      className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-zinc-300">
+                    <label className="block text-xs font-medium text-zinc-700">
                       Teléfono Celular *
                     </label>
                     <input
@@ -225,14 +208,14 @@ export default function CheckoutPage() {
                       required
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="Ej: 300 123 4567"
-                      className="mt-1.5 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                      placeholder="300 123 4567"
+                      className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300">
+                  <label className="block text-xs font-medium text-zinc-700">
                     Correo Electrónico *
                   </label>
                   <input
@@ -242,30 +225,27 @@ export default function CheckoutPage() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="daniel@ejemplo.com"
-                    className="mt-1.5 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                    className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                   />
-                  <p className="mt-1 text-[11px] text-zinc-500">
-                    Aquí recibirás la factura electrónica y el tracking de la transportadora.
-                  </p>
                 </div>
               </div>
 
-              {/* Shipping Address */}
-              <div className="space-y-4 pt-4 border-t border-zinc-800">
-                <h3 className="text-xs font-mono uppercase tracking-wider text-emerald-400">
-                  2. Dirección de Entrega en Colombia
+              {/* Shipping */}
+              <div className="space-y-3 pt-3 border-t border-zinc-100">
+                <h3 className="text-xs font-mono font-semibold uppercase text-zinc-400">
+                  2. Dirección en Colombia
                 </h3>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-medium text-zinc-300">
+                    <label className="block text-xs font-medium text-zinc-700">
                       Departamento *
                     </label>
                     <select
                       name="department"
                       value={formData.department}
                       onChange={handleChange}
-                      className="mt-1.5 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none"
+                      className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                     >
                       {COLOMBIAN_DEPARTMENTS.map((dept) => (
                         <option key={dept} value={dept}>
@@ -276,8 +256,8 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-zinc-300">
-                      Ciudad o Municipio *
+                    <label className="block text-xs font-medium text-zinc-700">
+                      Ciudad / Municipio *
                     </label>
                     <input
                       type="text"
@@ -285,15 +265,15 @@ export default function CheckoutPage() {
                       required
                       value={formData.city}
                       onChange={handleChange}
-                      placeholder="Ej: Bogotá, Medellín, Cali..."
-                      className="mt-1.5 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                      placeholder="Bogotá, Medellín, etc."
+                      className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300">
-                    Dirección Completa *
+                  <label className="block text-xs font-medium text-zinc-700">
+                    Dirección de Residencia / Trabajo *
                   </label>
                   <input
                     type="text"
@@ -301,39 +281,38 @@ export default function CheckoutPage() {
                     required
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder="Calle, Carrera, Avenida, Número de puerta"
-                    className="mt-1.5 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                    placeholder="Calle, Carrera, Transversal y Número"
+                    className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300">
-                    Edificio, Apartamento u Oficina (Opcional)
+                  <label className="block text-xs font-medium text-zinc-700">
+                    Apartamento, Torre u Oficina (Opcional)
                   </label>
                   <input
                     type="text"
                     name="additionalInfo"
                     value={formData.additionalInfo}
                     onChange={handleChange}
-                    placeholder="Ej: Edificio Quantum, Torre 2, Apto 402"
-                    className="mt-1.5 w-full rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
+                    placeholder="Apto 302, Torre 1"
+                    className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                   />
                 </div>
               </div>
 
-              {/* Payment Gateway Options */}
-              <div className="space-y-4 pt-4 border-t border-zinc-800">
-                <h3 className="text-xs font-mono uppercase tracking-wider text-emerald-400">
+              {/* Payment Method */}
+              <div className="space-y-3 pt-3 border-t border-zinc-100">
+                <h3 className="text-xs font-mono font-semibold uppercase text-zinc-400">
                   3. Pasarela de Pago
                 </h3>
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {/* Mercado Pago */}
                   <label
-                    className={`relative flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition-all ${
+                    className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3.5 transition-all ${
                       formData.paymentMethod === "mercadopago"
-                        ? "border-emerald-400 bg-emerald-500/10 shadow-lg shadow-emerald-500/5"
-                        : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700"
+                        ? "border-zinc-900 bg-zinc-50/80 shadow-2xs"
+                        : "border-zinc-200 bg-white hover:border-zinc-300"
                     }`}
                   >
                     <input
@@ -342,25 +321,24 @@ export default function CheckoutPage() {
                       value="mercadopago"
                       checked={formData.paymentMethod === "mercadopago"}
                       onChange={handleChange}
-                      className="mt-1 text-emerald-500 focus:ring-emerald-400"
+                      className="mt-1 text-zinc-900"
                     />
                     <div>
-                      <div className="flex items-center gap-2">
-                        <CreditCard className="h-4 w-4 text-emerald-400" />
-                        <span className="text-xs font-bold text-white">Mercado Pago</span>
+                      <div className="flex items-center gap-1.5">
+                        <CreditCard className="h-4 w-4 text-zinc-800" />
+                        <span className="text-xs font-bold text-zinc-900">Mercado Pago</span>
                       </div>
-                      <p className="mt-1 text-[11px] text-zinc-400">
-                        PSE, Tarjetas crédito/débito, Efecty. Menor comisión en Colombia.
+                      <p className="mt-0.5 text-[11px] text-zinc-500">
+                        PSE, Tarjetas crédito/débito y Efecty en Colombia.
                       </p>
                     </div>
                   </label>
 
-                  {/* Wompi Bancolombia */}
                   <label
-                    className={`relative flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition-all ${
+                    className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3.5 transition-all ${
                       formData.paymentMethod === "wompi"
-                        ? "border-emerald-400 bg-emerald-500/10 shadow-lg shadow-emerald-500/5"
-                        : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700"
+                        ? "border-zinc-900 bg-zinc-50/80 shadow-2xs"
+                        : "border-zinc-200 bg-white hover:border-zinc-300"
                     }`}
                   >
                     <input
@@ -369,58 +347,53 @@ export default function CheckoutPage() {
                       value="wompi"
                       checked={formData.paymentMethod === "wompi"}
                       onChange={handleChange}
-                      className="mt-1 text-emerald-500 focus:ring-emerald-400"
+                      className="mt-1 text-zinc-900"
                     />
                     <div>
-                      <div className="flex items-center gap-2">
-                        <Smartphone className="h-4 w-4 text-cyan-400" />
-                        <span className="text-xs font-bold text-white">Wompi / Bancolombia</span>
+                      <div className="flex items-center gap-1.5">
+                        <Smartphone className="h-4 w-4 text-zinc-800" />
+                        <span className="text-xs font-bold text-zinc-900">Wompi / Bancolombia</span>
                       </div>
-                      <p className="mt-1 text-[11px] text-zinc-400">
-                        Botón Bancolombia, Nequi y transferencias directas sin fricción.
+                      <p className="mt-0.5 text-[11px] text-zinc-500">
+                        Botón Bancolombia, Nequi y transferencias inmediatas.
                       </p>
                     </div>
                   </label>
                 </div>
               </div>
 
-              {/* Submit CTA */}
-              <div className="pt-4">
+              {/* Submit */}
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-4 text-sm font-bold text-zinc-950 shadow-xl shadow-emerald-500/20 transition-all hover:brightness-110 active:scale-[0.99] disabled:opacity-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-950 py-3.5 text-xs font-bold text-white shadow-xs hover:bg-zinc-800 active:scale-[0.99] disabled:opacity-50 transition-all"
                 >
-                  <Lock className="h-4 w-4" />
+                  <Lock className="h-3.5 w-3.5" />
                   <span>
                     {isSubmitting
-                      ? "Procesando pago seguro..."
-                      : `Confirmar y Pagar ${formatCOP(totalCOP)} COP`}
+                      ? "Procesando orden..."
+                      : `Pagar ${formatCOP(totalCOP)} COP`}
                   </span>
                 </button>
-                <div className="mt-3 flex items-center justify-center gap-2 text-center text-xs text-zinc-500">
-                  <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                  <span>Transacción encriptada SSL 256-bit certificada por la pasarela</span>
-                </div>
               </div>
             </form>
           </div>
         </div>
 
-        {/* Right: Order Summary */}
+        {/* Summary */}
         <div className="lg:col-span-5">
-          <div className="sticky top-24 rounded-3xl border border-zinc-800 bg-zinc-950 p-6 shadow-xl">
-            <h2 className="text-base font-bold text-white">Resumen del Pedido</h2>
-            <p className="text-xs text-zinc-400">{items.length} artículos en tu carrito</p>
+          <div className="sticky top-20 rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs">
+            <h2 className="text-sm font-bold text-zinc-900">Resumen del Pedido</h2>
+            <p className="text-xs text-zinc-500">{items.length} artículos</p>
 
-            {/* List */}
-            <div className="mt-6 max-h-72 overflow-y-auto space-y-3 pr-1">
+            <div className="mt-4 max-h-60 overflow-y-auto space-y-2 pr-1">
               {items.map(({ product, quantity }) => (
                 <div
                   key={product.id}
-                  className="flex items-center gap-3 rounded-xl border border-zinc-800/60 bg-zinc-900/40 p-2.5"
+                  className="flex items-center gap-2.5 rounded-lg border border-zinc-100 bg-zinc-50 p-2"
                 >
-                  <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900">
+                  <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border border-zinc-200 bg-white">
                     <Image
                       src={product.images[0]}
                       alt={product.name}
@@ -429,55 +402,30 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-xs font-medium text-white truncate">{product.name}</h4>
-                    <span className="text-[11px] text-zinc-400">Cant: {quantity}</span>
+                    <h4 className="text-xs font-medium text-zinc-900 truncate">{product.name}</h4>
+                    <span className="text-[11px] text-zinc-500">Cant: {quantity}</span>
                   </div>
-                  <span className="font-mono text-xs font-bold text-emerald-400">
+                  <span className="font-mono text-xs font-semibold text-zinc-900">
                     {formatCOP(product.price_cop * quantity)}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* Totals */}
-            <div className="mt-6 space-y-2 border-t border-zinc-800 pt-4 text-xs">
-              <div className="flex justify-between text-zinc-400">
+            <div className="mt-4 space-y-1.5 border-t border-zinc-100 pt-3 text-xs text-zinc-600">
+              <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span className="font-mono text-zinc-200">{formatCOP(subtotalCOP)}</span>
+                <span className="font-mono text-zinc-900">{formatCOP(subtotalCOP)}</span>
               </div>
-              <div className="flex justify-between text-zinc-400">
-                <span>Envío asegurado nacional</span>
-                <span className="font-mono text-zinc-200">
-                  {shippingCOP === 0 ? (
-                    <span className="text-emerald-400 font-semibold">GRATIS</span>
-                  ) : (
-                    formatCOP(shippingCOP)
-                  )}
+              <div className="flex justify-between">
+                <span>Envío</span>
+                <span className="font-mono text-zinc-900">
+                  {shippingCOP === 0 ? "GRATIS" : formatCOP(shippingCOP)}
                 </span>
               </div>
-              <div className="flex justify-between text-zinc-400">
-                <span>IVA (19% incluido)</span>
-                <span className="font-mono text-zinc-200">
-                  {formatCOP(Math.round(subtotalCOP * 0.19))}
-                </span>
-              </div>
-              <div className="border-t border-zinc-800 pt-3 flex justify-between text-base font-bold text-white">
-                <span>Total a Pagar</span>
-                <span className="font-mono text-lg text-emerald-400">
-                  {formatCOP(totalCOP)}
-                </span>
-              </div>
-            </div>
-
-            {/* Badges */}
-            <div className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 space-y-2.5 text-xs text-zinc-400">
-              <div className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                <span>Despacho con Servientrega / Coordinadora / Envia</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-cyan-400 flex-shrink-0" />
-                <span>Garantía de satisfacción y soporte técnico 24/7</span>
+              <div className="border-t border-zinc-200 pt-2 flex justify-between text-sm font-bold text-zinc-950">
+                <span>Total</span>
+                <span className="font-mono text-base">{formatCOP(totalCOP)}</span>
               </div>
             </div>
           </div>

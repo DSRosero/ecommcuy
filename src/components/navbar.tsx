@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ShoppingBag, Search, Sparkles, Menu, X, Cpu } from "lucide-react";
+import { ShoppingBag, Menu, X, Cpu } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 
 export function Navbar() {
@@ -10,70 +10,65 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 w-full border-b border-zinc-200/80 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
-        <Link href="/" className="group flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 p-0.5 shadow-lg shadow-emerald-500/20 transition-all duration-300 group-hover:shadow-emerald-500/40">
-            <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-zinc-950">
-              <Cpu className="h-5 w-5 text-emerald-400 transition-transform duration-300 group-hover:scale-110" />
-            </div>
+        <Link href="/" className="group flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+            <Cpu className="h-5 w-5 text-emerald-400" />
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="font-mono text-xl font-extrabold tracking-tight text-white">
-                Ecomm<span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Cuy</span>
+              <span className="font-mono text-lg font-black tracking-tight text-zinc-900">
+                Ecomm<span className="text-emerald-600">Cuy</span>
               </span>
-              <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">
-                PRO
+              <span className="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-600">
+                COP
               </span>
             </div>
-            <span className="text-[10px] uppercase tracking-wider text-zinc-400">
-              High-End Tech • Colombia
-            </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600">
           <Link
             href="/#catalogo"
-            className="transition-colors hover:text-white"
+            className="transition-colors hover:text-zinc-900"
           >
-            Catálogo Completo
+            Catálogo
           </Link>
           <Link
             href="/#laptops-pro"
-            className="transition-colors hover:text-white"
+            className="transition-colors hover:text-zinc-900"
           >
-            Laptops & Estaciones
+            Laptops
           </Link>
           <Link
             href="/#perifericos"
-            className="transition-colors hover:text-white"
+            className="transition-colors hover:text-zinc-900"
           >
             Periféricos
           </Link>
           <Link
             href="/#audio-hi-fi"
-            className="transition-colors hover:text-white"
+            className="transition-colors hover:text-zinc-900"
           >
-            Audio Hi-Fi
+            Audio
           </Link>
         </nav>
 
-        {/* Action Buttons */}
+        {/* Actions */}
         <div className="flex items-center gap-3">
           {/* Cart Trigger */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative flex h-10 items-center gap-2.5 rounded-xl border border-zinc-800 bg-zinc-900/80 px-3.5 text-sm font-medium text-zinc-200 transition-all hover:border-emerald-500/50 hover:bg-zinc-800/80"
-            aria-label="Abrir carrito de compras"
+            className="relative flex h-10 items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 text-xs font-semibold text-zinc-800 shadow-xs transition-all hover:border-zinc-300 hover:bg-zinc-50"
+            aria-label="Abrir carrito"
           >
-            <ShoppingBag className="h-4 w-4 text-emerald-400" />
-            <span className="hidden sm:inline">Carrito</span>
+            <ShoppingBag className="h-4 w-4 text-zinc-700" />
+            <span>Carrito</span>
             {totalItems > 0 && (
-              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1.5 text-xs font-bold text-zinc-950">
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-zinc-900 px-1.5 text-[11px] font-bold text-white">
                 {totalItems}
               </span>
             )}
@@ -82,8 +77,8 @@ export function Navbar() {
           {/* Mobile menu toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 md:hidden text-zinc-400 hover:text-white"
-            aria-label="Abrir menú"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200 bg-white md:hidden text-zinc-700 hover:bg-zinc-50"
+            aria-label="Menú"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -92,34 +87,34 @@ export function Navbar() {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="border-b border-zinc-800 bg-zinc-950 px-4 py-4 md:hidden space-y-3">
+        <div className="border-b border-zinc-200 bg-white px-6 py-4 md:hidden space-y-3 text-sm font-medium text-zinc-700">
           <Link
             href="/#catalogo"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-medium text-zinc-300 hover:text-emerald-400"
+            className="block py-1 hover:text-emerald-600"
           >
-            Catálogo Completo
+            Catálogo
           </Link>
           <Link
             href="/#laptops-pro"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-medium text-zinc-300 hover:text-emerald-400"
+            className="block py-1 hover:text-emerald-600"
           >
-            Laptops & Estaciones
+            Laptops
           </Link>
           <Link
             href="/#perifericos"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-medium text-zinc-300 hover:text-emerald-400"
+            className="block py-1 hover:text-emerald-600"
           >
             Periféricos
           </Link>
           <Link
             href="/#audio-hi-fi"
             onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-medium text-zinc-300 hover:text-emerald-400"
+            className="block py-1 hover:text-emerald-600"
           >
-            Audio Hi-Fi
+            Audio
           </Link>
         </div>
       )}

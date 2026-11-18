@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Search, SlidersHorizontal, Sparkles } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { CATEGORIES, MOCK_PRODUCTS } from "@/data/mock-products";
 import { Product } from "@/types";
 import { ProductCard } from "@/components/product-card";
@@ -15,11 +15,9 @@ export function CatalogSection() {
 
   const filteredProducts = useMemo(() => {
     return MOCK_PRODUCTS.filter((product) => {
-      // Category match
       const matchesCategory =
         selectedCategory === "all" || product.category_id === selectedCategory;
 
-      // Search match
       const query = searchQuery.toLowerCase().trim();
       const matchesSearch =
         query === "" ||
@@ -38,53 +36,41 @@ export function CatalogSection() {
   }, [selectedCategory, searchQuery, sortBy]);
 
   return (
-    <section id="catalogo" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-zinc-800">
+    <section id="catalogo" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-200">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-medium text-emerald-400 uppercase tracking-widest">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Colección Oficial 2026</span>
-          </div>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            Catálogo de Hardware & Periféricos
+          <h2 className="text-2xl font-bold tracking-tight text-zinc-950 sm:text-3xl">
+            Catálogo de Equipos
           </h2>
-          <p className="mt-1 text-sm text-zinc-400">
-            Productos certificados con garantía directa y envío rápido a toda Colombia.
+          <p className="mt-1 text-sm text-zinc-500">
+            Hardware con garantía oficial y soporte local en Colombia.
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+        {/* Search */}
+        <div className="relative w-full md:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Buscar por modelo, chip, marca..."
-            className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2.5 pl-10 pr-4 text-xs text-zinc-200 placeholder-zinc-500 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 transition-all"
+            placeholder="Buscar modelo o marca..."
+            className="w-full rounded-xl border border-zinc-200 bg-white py-2 pl-9 pr-4 text-xs text-zinc-900 placeholder-zinc-400 shadow-2xs focus:border-zinc-400 focus:outline-none"
           />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500 hover:text-white"
-            >
-              Limpiar
-            </button>
-          )}
         </div>
       </div>
 
-      {/* Filter Tabs & Sorting Bar */}
-      <div className="mt-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        {/* Category Pills */}
+      {/* Filter Tabs & Sorting */}
+      <div className="mt-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        {/* Pills */}
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`rounded-xl px-4 py-2 text-xs font-medium transition-all ${
+            className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
               selectedCategory === "all"
-                ? "bg-emerald-500 text-zinc-950 font-bold shadow-md shadow-emerald-500/20"
-                : "border border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-zinc-700 hover:text-white"
+                ? "bg-zinc-900 text-white shadow-2xs"
+                : "border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
             }`}
           >
             Todos ({MOCK_PRODUCTS.length})
@@ -94,10 +80,10 @@ export function CatalogSection() {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`rounded-xl px-4 py-2 text-xs font-medium transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
                 selectedCategory === cat.id
-                  ? "bg-emerald-500 text-zinc-950 font-bold shadow-md shadow-emerald-500/20"
-                  : "border border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-zinc-700 hover:text-white"
+                  ? "bg-zinc-900 text-white shadow-2xs"
+                  : "border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
               }`}
             >
               {cat.name}
@@ -105,14 +91,14 @@ export function CatalogSection() {
           ))}
         </div>
 
-        {/* Sort Select */}
+        {/* Sort */}
         <div className="flex items-center gap-2 self-end lg:self-auto">
-          <SlidersHorizontal className="h-4 w-4 text-zinc-500" />
-          <span className="text-xs text-zinc-400">Ordenar por:</span>
+          <SlidersHorizontal className="h-3.5 w-3.5 text-zinc-400" />
+          <span className="text-xs text-zinc-500">Ordenar:</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs text-zinc-200 focus:border-emerald-500/50 focus:outline-none"
+            className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs text-zinc-700 focus:border-zinc-400 focus:outline-none"
           >
             <option value="featured">Destacados</option>
             <option value="price-asc">Menor precio</option>
@@ -122,22 +108,19 @@ export function CatalogSection() {
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Grid */}
       <div className="mt-8">
         {filteredProducts.length === 0 ? (
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-12 text-center">
-            <p className="text-base font-semibold text-zinc-300">
-              No se encontraron productos con los filtros seleccionados
-            </p>
-            <p className="mt-1 text-xs text-zinc-500">
-              Prueba cambiando la búsqueda o seleccionando otra categoría.
+          <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center">
+            <p className="text-sm font-semibold text-zinc-700">
+              No se encontraron productos coincidentes
             </p>
             <button
               onClick={() => {
                 setSelectedCategory("all");
                 setSearchQuery("");
               }}
-              className="mt-4 rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2 text-xs font-medium text-white hover:bg-zinc-700"
+              className="mt-3 rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-semibold text-white hover:bg-zinc-800"
             >
               Restablecer filtros
             </button>

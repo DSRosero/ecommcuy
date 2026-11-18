@@ -4,161 +4,140 @@ import { Cpu, ShieldCheck, Truck, RotateCcw, CreditCard } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-zinc-800 bg-zinc-950 text-zinc-400">
-      {/* Value Proposition Highlights */}
-      <div className="border-b border-zinc-800/80 bg-zinc-900/20 py-8">
+    <footer className="border-t border-zinc-200 bg-white text-zinc-600">
+      {/* Value Badges */}
+      <div className="border-b border-zinc-100 py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
-                <Truck className="h-5 w-5" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800">
+                <Truck className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-zinc-100">Envíos Asegurados</h4>
-                <p className="text-xs text-zinc-400">Cobertura total en toda Colombia</p>
+                <h4 className="text-xs font-bold text-zinc-900">Envíos Asegurados</h4>
+                <p className="text-[11px] text-zinc-500">Cobertura en toda Colombia</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-400">
-                <ShieldCheck className="h-5 w-5" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800">
+                <ShieldCheck className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-zinc-100">Garantía Directa</h4>
-                <p className="text-xs text-zinc-400">12 meses en hardware premium</p>
+                <h4 className="text-xs font-bold text-zinc-900">Garantía Directa</h4>
+                <p className="text-[11px] text-zinc-500">12 meses en hardware</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
-                <RotateCcw className="h-5 w-5" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800">
+                <RotateCcw className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-zinc-100">Devolución Fácil</h4>
-                <p className="text-xs text-zinc-400">30 días de satisfacción total</p>
+                <h4 className="text-xs font-bold text-zinc-900">Satisfacción Total</h4>
+                <p className="text-[11px] text-zinc-500">30 días de acompañamiento</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3.5">
-              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-400">
-                <CreditCard className="h-5 w-5" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800">
+                <CreditCard className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-zinc-100">Pagos Seguros en COP</h4>
-                <p className="text-xs text-zinc-400">PSE, Tarjetas, Nequi y Efecty</p>
+                <h4 className="text-xs font-bold text-zinc-900">Pagos Seguros en COP</h4>
+                <p className="text-[11px] text-zinc-500">PSE, Tarjetas y Nequi</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Footer Content */}
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      {/* Main Footer */}
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          {/* Brand */}
-          <div className="space-y-4 md:col-span-1">
+          <div className="space-y-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 text-zinc-950 font-bold">
-                <Cpu className="h-5 w-5" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-900 text-white font-bold">
+                <Cpu className="h-4 w-4 text-emerald-400" />
               </div>
-              <span className="font-mono text-lg font-bold text-white">
-                Ecomm<span className="text-emerald-400">Cuy</span>
+              <span className="font-mono text-base font-bold text-zinc-900">
+                Ecomm<span className="text-emerald-600">Cuy</span>
               </span>
             </Link>
-            <p className="text-xs leading-relaxed text-zinc-400">
-              Tienda especializada en hardware de alto rendimiento, periféricos de precisión y tecnología para creadores, desarrolladores e ingenieros en Colombia.
+            <p className="text-xs text-zinc-500 leading-relaxed">
+              Equipos de alto desempeño y periféricos profesionales en Colombia.
             </p>
-            <div className="flex items-center gap-2 text-xs text-zinc-400">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Sede de despacho: Bogotá D.C., Colombia</span>
-            </div>
           </div>
 
-          {/* Links 1 */}
           <div>
-            <h5 className="font-mono text-xs font-semibold uppercase tracking-wider text-zinc-200">
+            <h5 className="font-mono text-xs font-bold uppercase tracking-wider text-zinc-900">
               Categorías
             </h5>
-            <ul className="mt-4 space-y-2 text-xs">
+            <ul className="mt-3 space-y-1.5 text-xs text-zinc-500">
               <li>
-                <Link href="/#laptops-pro" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#laptops-pro" className="hover:text-zinc-900">
                   Laptops & Estaciones
                 </Link>
               </li>
               <li>
-                <Link href="/#perifericos" className="hover:text-emerald-400 transition-colors">
-                  Periféricos & Teclados Custom
+                <Link href="/#perifericos" className="hover:text-zinc-900">
+                  Periféricos
                 </Link>
               </li>
               <li>
-                <Link href="/#audio-hi-fi" className="hover:text-emerald-400 transition-colors">
-                  Audio Hi-Fi & Acústica
-                </Link>
-              </li>
-              <li>
-                <Link href="/#monitores" className="hover:text-emerald-400 transition-colors">
-                  Monitores QD-OLED & 4K
+                <Link href="/#audio-hi-fi" className="hover:text-zinc-900">
+                  Audio Hi-Fi
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Links 2 */}
           <div>
-            <h5 className="font-mono text-xs font-semibold uppercase tracking-wider text-zinc-200">
-              Soporte & Guías
+            <h5 className="font-mono text-xs font-bold uppercase tracking-wider text-zinc-900">
+              Soporte
             </h5>
-            <ul className="mt-4 space-y-2 text-xs">
+            <ul className="mt-3 space-y-1.5 text-xs text-zinc-500">
               <li>
-                <a href="#contacto" className="hover:text-emerald-400 transition-colors">
-                  Rastreo de Pedidos
+                <a href="#" className="hover:text-zinc-900">
+                  Garantías y Devoluciones
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-emerald-400 transition-colors">
-                  Preguntas Frecuentes (FAQ)
-                </a>
-              </li>
-              <li>
-                <a href="#garantias" className="hover:text-emerald-400 transition-colors">
-                  Políticas de Garantía
-                </a>
-              </li>
-              <li>
-                <a href="#envios" className="hover:text-emerald-400 transition-colors">
+                <a href="#" className="hover:text-zinc-900">
                   Tiempos de Entrega
                 </a>
               </li>
+              <li>
+                <a href="#" className="hover:text-zinc-900">
+                  Preguntas Frecuentes
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Payment Badges & Trust */}
-          <div className="space-y-3">
-            <h5 className="font-mono text-xs font-semibold uppercase tracking-wider text-zinc-200">
-              Métodos de Pago Aceptados
+          <div className="space-y-2">
+            <h5 className="font-mono text-xs font-bold uppercase tracking-wider text-zinc-900">
+              Medios Aceptados
             </h5>
-            <p className="text-xs text-zinc-400">
-              Transacciones procesadas mediante pasarelas certificadas PCI-DSS Nivel 1.
-            </p>
-            <div className="flex flex-wrap gap-2 pt-1">
-              <span className="rounded border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[11px] font-mono font-medium text-zinc-300">
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              <span className="rounded border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] font-mono text-zinc-700">
                 PSE
               </span>
-              <span className="rounded border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[11px] font-mono font-medium text-zinc-300">
-                Visa / Mastercard
+              <span className="rounded border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] font-mono text-zinc-700">
+                Visa / Master
               </span>
-              <span className="rounded border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[11px] font-mono font-medium text-zinc-300">
-                Nequi / Daviplata
+              <span className="rounded border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] font-mono text-zinc-700">
+                Nequi
               </span>
-              <span className="rounded border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-[11px] font-mono font-medium text-zinc-300">
-                Efecty
+              <span className="rounded border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] font-mono text-zinc-700">
+                Bancolombia
               </span>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-zinc-800/80 pt-6 text-center text-xs text-zinc-400">
-          <p>© 2026 EcommCuy Technologies Inc. Todos los derechos reservados. Desarrollado con Next.js, Supabase y Vercel.</p>
+        <div className="mt-8 border-t border-zinc-100 pt-6 text-center text-xs text-zinc-400">
+          <p>© 2026 EcommCuy. Desarrollado con Next.js, Supabase y Vercel.</p>
         </div>
       </div>
     </footer>

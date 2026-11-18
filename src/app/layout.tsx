@@ -17,18 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EcommCuy | Tecnología de Alto Rendimiento & Gadgets Pro",
+  title: "EcommCuy | Tecnología de Alto Rendimiento",
   description:
-    "EcommCuy es la tienda insignia de hardware premium, periféricos mecánicos, audio Hi-Fi y gadgets de vanguardia en Colombia con pagos seguros en COP.",
-  keywords: [
-    "ecommerce colombia",
-    "tecnologia colombia",
-    "hardware pro",
-    "teclados mecanicos",
-    "monitores oled",
-    "laptops estudio",
-    "audio hi-fi",
-  ],
+    "EcommCuy: Hardware selecto, estaciones de trabajo y periféricos de ingeniería con despacho en Colombia en moneda local (COP).",
 };
 
 export default function RootLayout({
@@ -39,9 +30,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100">
+      <body className="min-h-full flex flex-col bg-[#fbfbfb] text-zinc-900">
         <CartProvider>
           <Navbar />
           <CartDrawer />
