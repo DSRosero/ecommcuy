@@ -51,6 +51,10 @@ export default function CheckoutPage() {
     notes: "",
   });
 
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; percent: number } | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [orderCompleted, setOrderCompleted] = useState<{
@@ -59,6 +63,21 @@ export default function CheckoutPage() {
     email: string;
     paymentMethod: string;
   } | null>(null);
+
+  const discountAmount = appliedCoupon ? Math.round(subtotalCOP * (appliedCoupon.percent / 100)) : 0;
+  const finalTotalCOP = Math.max(0, totalCOP - discountAmount);
+
+  const handleApplyCoupon = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCouponError(null);
+    const cleanCode = couponCode.trim().toUpperCase();
+    if (cleanCode === "ECOMMCUY10" || cleanCode === "PROMO2026" || cleanCode === "COLOMBIA10") {
+      setAppliedCoupon({ code: cleanCode, percent: 10 });
+      setCouponCode("");
+    } else {
+      setCouponError("Cupón no válido o expirado. Prueba con ECOMMCUY10");
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -83,6 +102,7 @@ export default function CheckoutPage() {
             items,
             customer: formData,
             shippingCOP,
+            discountPercent: appliedCoupon?.percent || 0,
           }),
         });
 
@@ -109,7 +129,7 @@ export default function CheckoutPage() {
 
     setOrderCompleted({
       orderId: generatedOrderId,
-      total: totalCOP,
+      total: finalTotalCOP,
       email: formData.email,
       paymentMethod:
         formData.paymentMethod === "mercadopago"
@@ -450,7 +470,7 @@ export default function CheckoutPage() {
                   <span>
                     {isSubmitting
                       ? "Redirigiendo a Stripe..."
-                      : `Pagar ${formatCOP(totalCOP)} COP con Stripe`}
+                      : `Pagar ${formatCOP(finalTotalCOP)} COP con Stripe`}
                   </span>
                 </button>
               </div>
@@ -489,11 +509,55 @@ export default function CheckoutPage() {
               ))}
             </div>
 
+            {/* Coupon Code Section */}
+            <div className="mt-4 border-t border-zinc-100 pt-3">
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-800 border border-emerald-200">
+                  <span className="font-semibold">Cupón {appliedCoupon.code} (-{appliedCoupon.percent}%)</span>
+                  <button
+                    type="button"
+                    onClick={() => setAppliedCoupon(null)}
+                    className="text-xs font-bold text-emerald-700 hover:text-emerald-900 cursor-pointer"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Código de cupón (Ej: ECOMMCUY10)"
+                      className="flex-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none uppercase"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleApplyCoupon}
+                      className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-800 cursor-pointer"
+                    >
+                      Aplicar
+                    </button>
+                  </div>
+                  {couponError && (
+                    <p className="text-[11px] text-red-600">{couponError}</p>
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="mt-4 space-y-1.5 border-t border-zinc-100 pt-3 text-xs text-zinc-600">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span className="font-mono text-zinc-900">{formatCOP(subtotalCOP)}</span>
               </div>
+              {appliedCoupon && (
+                <div className="flex justify-between text-emerald-700 font-semibold">
+                  <span>Descuento ({appliedCoupon.percent}%)</span>
+                  <span className="font-mono">-{formatCOP(discountAmount)}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span>Envío</span>
                 <span className="font-mono text-zinc-900">
@@ -502,7 +566,7 @@ export default function CheckoutPage() {
               </div>
               <div className="border-t border-zinc-200 pt-2 flex justify-between text-sm font-bold text-zinc-950">
                 <span>Total</span>
-                <span className="font-mono text-base">{formatCOP(totalCOP)}</span>
+                <span className="font-mono text-base">{formatCOP(finalTotalCOP)}</span>
               </div>
             </div>
 

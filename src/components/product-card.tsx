@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Star, ShoppingBag, Eye, Check } from "lucide-react";
+import { Star, ShoppingBag, Eye, Check, Heart } from "lucide-react";
 import { Product } from "@/types";
 import { useCart } from "@/context/cart-context";
 import { formatCOP } from "@/lib/utils";
@@ -10,9 +10,16 @@ import { formatCOP } from "@/lib/utils";
 interface ProductCardProps {
   product: Product;
   onOpenQuickView: (product: Product) => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: (productId: string) => void;
 }
 
-export function ProductCard({ product, onOpenQuickView }: ProductCardProps) {
+export function ProductCard({
+  product,
+  onOpenQuickView,
+  isFavorite = false,
+  onToggleFavorite,
+}: ProductCardProps) {
   const { addItem } = useCart();
   const [justAdded, setJustAdded] = useState(false);
 
@@ -21,6 +28,13 @@ export function ProductCard({ product, onOpenQuickView }: ProductCardProps) {
     addItem(product, 1);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
+  };
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onToggleFavorite) {
+      onToggleFavorite(product.id);
+    }
   };
 
   return (
@@ -45,6 +59,18 @@ export function ProductCard({ product, onOpenQuickView }: ProductCardProps) {
             )}
           </div>
 
+          {/* Favorite Button */}
+          <button
+            onClick={handleFavoriteClick}
+            className={`absolute top-2.5 right-2.5 flex h-7 w-7 items-center justify-center rounded-full border border-zinc-200 bg-white/95 shadow-xs backdrop-blur-xs transition-all hover:scale-110 ${
+              isFavorite ? "text-red-500" : "text-zinc-400 hover:text-zinc-700"
+            }`}
+            title={isFavorite ? "Eliminar de favoritos" : "Guardar en favoritos"}
+            aria-label="Favorito"
+          >
+            <Heart className={`h-3.5 w-3.5 ${isFavorite ? "fill-red-500" : ""}`} />
+          </button>
+
           {/* Quick View Button */}
           <button
             onClick={() => onOpenQuickView(product)}
@@ -58,7 +84,7 @@ export function ProductCard({ product, onOpenQuickView }: ProductCardProps) {
         {/* Info */}
         <div className="mt-3.5 space-y-1.5">
           <div className="flex items-center justify-between text-xs text-zinc-500">
-            <span className="font-medium">{product.category_name}</span>
+            <span className="font-medium text-emerald-700">{product.category_name}</span>
             <div className="flex items-center gap-1 text-zinc-700">
               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
               <span>{product.rating}</span>
@@ -82,9 +108,16 @@ export function ProductCard({ product, onOpenQuickView }: ProductCardProps) {
       <div className="mt-4 pt-3.5 border-t border-zinc-100 flex items-center justify-between">
         <div>
           <span className="text-[10px] text-zinc-400 block uppercase font-mono">COP</span>
-          <span className="font-mono text-base font-bold text-zinc-900">
-            {formatCOP(product.price_cop)}
-          </span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-mono text-base font-bold text-zinc-900">
+              {formatCOP(product.price_cop)}
+            </span>
+            {product.original_price_cop && (
+              <span className="font-mono text-xs text-zinc-400 line-through">
+                {formatCOP(product.original_price_cop)}
+              </span>
+            )}
+          </div>
         </div>
 
         <button
@@ -92,7 +125,7 @@ export function ProductCard({ product, onOpenQuickView }: ProductCardProps) {
           className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
             justAdded
               ? "bg-emerald-600 text-white"
-              : "bg-zinc-900 text-white hover:bg-zinc-800"
+              : "bg-zinc-900 text-white hover:bg-zinc-800 active:scale-95"
           }`}
           aria-label="Agregar al carrito"
         >

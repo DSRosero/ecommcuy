@@ -30,30 +30,24 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-600">
-          <Link
-            href="/#catalogo"
-            className="transition-colors hover:text-zinc-900"
-          >
+        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-600">
+          <Link href="/#catalogo" className="transition-colors hover:text-zinc-900">
             Catálogo
           </Link>
-          <Link
-            href="/#laptops-pro"
-            className="transition-colors hover:text-zinc-900"
-          >
+          <Link href="/#catalogo" className="transition-colors hover:text-zinc-900">
             Laptops
           </Link>
-          <Link
-            href="/#perifericos"
-            className="transition-colors hover:text-zinc-900"
-          >
-            Periféricos
+          <Link href="/#catalogo" className="transition-colors hover:text-zinc-900">
+            Componentes & GPUs
           </Link>
-          <Link
-            href="/#audio-hi-fi"
-            className="transition-colors hover:text-zinc-900"
-          >
-            Audio
+          <Link href="/#catalogo" className="transition-colors hover:text-zinc-900">
+            Monitores
+          </Link>
+          <Link href="/#catalogo" className="transition-colors hover:text-zinc-900">
+            Teclados & Audio
+          </Link>
+          <Link href="/#catalogo" className="transition-colors hover:text-zinc-900">
+            Drones
           </Link>
         </nav>
 

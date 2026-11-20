@@ -5,10 +5,11 @@ import { CartItem, ShippingInfo } from "@/types";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { items, customer, shippingCOP } = body as {
+    const { items, customer, shippingCOP, discountPercent = 0 } = body as {
       items: CartItem[];
       customer: ShippingInfo;
       shippingCOP: number;
+      discountPercent?: number;
     };
 
     if (!items || items.length === 0) {
@@ -27,16 +28,18 @@ export async function POST(req: NextRequest) {
 
     const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
+    const discountFactor = discountPercent > 0 ? (100 - Math.min(discountPercent, 50)) / 100 : 1;
+
     // Build line items for Stripe Checkout (COP has 2 decimals in Stripe, multiply by 100)
     const line_items: any[] = items.map((item) => ({
       price_data: {
         currency: "cop",
         product_data: {
-          name: item.product.name,
+          name: item.product.name + (discountPercent > 0 ? ` (${discountPercent}% OFF)` : ""),
           images: item.product.images.slice(0, 1),
           description: item.product.short_description || undefined,
         },
-        unit_amount: Math.round(item.product.price_cop * 100),
+        unit_amount: Math.round(item.product.price_cop * discountFactor * 100),
       },
       quantity: item.quantity,
     }));
@@ -66,6 +69,7 @@ export async function POST(req: NextRequest) {
         shipping_address: `${customer.address}, ${customer.city}, ${customer.department}`,
         shipping_department: customer.department,
         shipping_city: customer.city,
+        discount_applied: discountPercent > 0 ? `${discountPercent}%` : "none",
       },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout?canceled=true`,
