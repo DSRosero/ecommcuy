@@ -11,6 +11,7 @@ import {
   Lock,
   CreditCard,
   Smartphone,
+  Zap,
 } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { formatCOP } from "@/lib/utils";
@@ -46,11 +47,12 @@ export default function CheckoutPage() {
     additionalInfo: "",
     city: "Bogotá",
     department: "Bogotá D.C.",
-    paymentMethod: "mercadopago",
+    paymentMethod: "stripe",
     notes: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [orderCompleted, setOrderCompleted] = useState<{
     orderId: string;
     total: number;
@@ -69,8 +71,40 @@ export default function CheckoutPage() {
     if (items.length === 0) return;
 
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1400));
+    setErrorMessage(null);
 
+    // If Stripe selected, redirect to Stripe Hosted Checkout
+    if (formData.paymentMethod === "stripe") {
+      try {
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items,
+            customer: formData,
+            shippingCOP,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        } else {
+          setErrorMessage(data.error || "No se pudo iniciar el checkout con Stripe.");
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (err: any) {
+        setErrorMessage(err?.message || "Error al conectar con la pasarela Stripe.");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // Fallback simulated order for manual methods
+    await new Promise((resolve) => setTimeout(resolve, 1400));
     const generatedOrderId = `EC-${Math.floor(100000 + Math.random() * 900000)}`;
 
     setOrderCompleted({
@@ -170,10 +204,16 @@ export default function CheckoutPage() {
         {/* Form */}
         <div className="lg:col-span-7">
           <div className="rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-xs">
-            <h1 className="text-xl font-bold text-zinc-950">Datos de Entrega</h1>
+            <h1 className="text-xl font-bold text-zinc-950">Datos de Entrega & Facturación</h1>
             <p className="mt-0.5 text-xs text-zinc-500">
-              Despachamos de forma segura a cualquier municipio de Colombia.
+              Despachos asegurados a nivel nacional. Pago seguro procesado por Stripe.
             </p>
+
+            {errorMessage && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700">
+                {errorMessage}
+              </div>
+            )}
 
             <form onSubmit={handleSubmitOrder} className="mt-6 space-y-5">
               {/* Contact */}
@@ -208,7 +248,7 @@ export default function CheckoutPage() {
                       required
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="300 123 4567"
+                      placeholder="316 642 0844"
                       className="mt-1 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-zinc-400 focus:outline-none"
                     />
                   </div>
@@ -307,63 +347,100 @@ export default function CheckoutPage() {
                   3. Pasarela de Pago
                 </h3>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="space-y-2.5">
+                  {/* Stripe Card / Apple Pay / Google Pay */}
                   <label
-                    className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3.5 transition-all ${
-                      formData.paymentMethod === "mercadopago"
-                        ? "border-zinc-900 bg-zinc-50/80 shadow-2xs"
+                    className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-all ${
+                      formData.paymentMethod === "stripe"
+                        ? "border-zinc-950 bg-zinc-50/90 shadow-xs ring-1 ring-zinc-950"
                         : "border-zinc-200 bg-white hover:border-zinc-300"
                     }`}
                   >
                     <input
                       type="radio"
                       name="paymentMethod"
-                      value="mercadopago"
-                      checked={formData.paymentMethod === "mercadopago"}
+                      value="stripe"
+                      checked={formData.paymentMethod === "stripe"}
                       onChange={handleChange}
-                      className="mt-1 text-zinc-900"
+                      className="mt-1 text-zinc-950"
                     />
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <CreditCard className="h-4 w-4 text-zinc-800" />
-                        <span className="text-xs font-bold text-zinc-900">Mercado Pago</span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Zap className="h-4 w-4 text-emerald-600" />
+                          <span className="text-xs font-bold text-zinc-950">
+                            Stripe Checkout (Tarjetas, Apple Pay & Google Pay)
+                          </span>
+                        </div>
+                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                          Recomendado
+                        </span>
                       </div>
-                      <p className="mt-0.5 text-[11px] text-zinc-500">
-                        PSE, Tarjetas crédito/débito y Efecty en Colombia.
+                      <p className="mt-1 text-[11px] text-zinc-500 leading-relaxed">
+                        Pago seguro internacional e instantáneo. Acepta Visa, Mastercard, American Express, Apple Pay y Link con cifrado bancario.
                       </p>
                     </div>
                   </label>
 
-                  <label
-                    className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3.5 transition-all ${
-                      formData.paymentMethod === "wompi"
-                        ? "border-zinc-900 bg-zinc-50/80 shadow-2xs"
-                        : "border-zinc-200 bg-white hover:border-zinc-300"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="wompi"
-                      checked={formData.paymentMethod === "wompi"}
-                      onChange={handleChange}
-                      className="mt-1 text-zinc-900"
-                    />
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <Smartphone className="h-4 w-4 text-zinc-800" />
-                        <span className="text-xs font-bold text-zinc-900">Wompi / Bancolombia</span>
+                  {/* Other options */}
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    <label
+                      className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 transition-all ${
+                        formData.paymentMethod === "mercadopago"
+                          ? "border-zinc-900 bg-zinc-50/80 shadow-2xs"
+                          : "border-zinc-200 bg-white hover:border-zinc-300"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="mercadopago"
+                        checked={formData.paymentMethod === "mercadopago"}
+                        onChange={handleChange}
+                        className="mt-1 text-zinc-900"
+                      />
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <CreditCard className="h-4 w-4 text-zinc-800" />
+                          <span className="text-xs font-bold text-zinc-900">Mercado Pago</span>
+                        </div>
+                        <p className="mt-0.5 text-[11px] text-zinc-500">
+                          PSE, Tarjetas locales y Efecty.
+                        </p>
                       </div>
-                      <p className="mt-0.5 text-[11px] text-zinc-500">
-                        Botón Bancolombia, Nequi y transferencias inmediatas.
-                      </p>
-                    </div>
-                  </label>
+                    </label>
+
+                    <label
+                      className={`flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 transition-all ${
+                        formData.paymentMethod === "wompi"
+                          ? "border-zinc-900 bg-zinc-50/80 shadow-2xs"
+                          : "border-zinc-200 bg-white hover:border-zinc-300"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="wompi"
+                        checked={formData.paymentMethod === "wompi"}
+                        onChange={handleChange}
+                        className="mt-1 text-zinc-900"
+                      />
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <Smartphone className="h-4 w-4 text-zinc-800" />
+                          <span className="text-xs font-bold text-zinc-900">Wompi / Bancolombia</span>
+                        </div>
+                        <p className="mt-0.5 text-[11px] text-zinc-500">
+                          Botón Bancolombia y Nequi.
+                        </p>
+                      </div>
+                    </label>
+                  </div>
                 </div>
               </div>
 
               {/* Submit */}
-              <div className="pt-2">
+              <div className="pt-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -372,8 +449,8 @@ export default function CheckoutPage() {
                   <Lock className="h-3.5 w-3.5" />
                   <span>
                     {isSubmitting
-                      ? "Procesando orden..."
-                      : `Pagar ${formatCOP(totalCOP)} COP`}
+                      ? "Redirigiendo a Stripe..."
+                      : `Pagar ${formatCOP(totalCOP)} COP con Stripe`}
                   </span>
                 </button>
               </div>
@@ -427,6 +504,16 @@ export default function CheckoutPage() {
                 <span>Total</span>
                 <span className="font-mono text-base">{formatCOP(totalCOP)}</span>
               </div>
+            </div>
+
+            <div className="mt-5 rounded-xl border border-zinc-200 bg-zinc-50/80 p-3 space-y-1.5 text-xs text-zinc-500">
+              <div className="flex items-center gap-1.5 text-zinc-700 font-semibold">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                <span>Garantía Stripe Certified</span>
+              </div>
+              <p className="text-[11px] leading-relaxed">
+                Tus datos de tarjeta nunca tocan nuestros servidores. Todo el procesamiento se realiza en los servidores seguros certificados PCI Nivel 1 de Stripe.
+              </p>
             </div>
           </div>
         </div>
