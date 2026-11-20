@@ -1,22 +1,31 @@
 "use client";
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, ArrowLeft, ShieldCheck, Truck, MessageCircle } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 
 function SuccessContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const { clearCart } = useCart();
+  const hasCleared = useRef(false);
 
   useEffect(() => {
-    // Clear cart once checkout is successfully completed
-    clearCart();
+    if (!hasCleared.current) {
+      hasCleared.current = true;
+      clearCart();
+    }
   }, [clearCart]);
 
   const displayId = sessionId ? `STRIPE-${sessionId.slice(-8).toUpperCase()}` : "EC-CONFIRMADO";
+
+  const handleReturnHome = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push("/");
+  };
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 text-center">
@@ -60,7 +69,8 @@ function SuccessContent() {
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-5 py-2.5 text-xs font-semibold text-white hover:bg-zinc-800 transition-colors"
+          onClick={handleReturnHome}
+          className="inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-5 py-2.5 text-xs font-semibold text-white hover:bg-zinc-800 transition-colors cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Volver al Catálogo</span>
@@ -72,7 +82,7 @@ function SuccessContent() {
           )}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-xs font-semibold text-zinc-800 hover:bg-zinc-50 transition-colors shadow-2xs"
+          className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-xs font-semibold text-zinc-800 hover:bg-zinc-50 transition-colors shadow-2xs cursor-pointer"
         >
           <MessageCircle className="h-4 w-4 text-emerald-600" />
           <span>Notificar por WhatsApp</span>

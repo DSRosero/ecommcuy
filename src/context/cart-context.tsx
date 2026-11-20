@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { CartItem, Product } from "@/types";
 
 interface CartContextType {
@@ -51,7 +51,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, isLoaded]);
 
-  const addItem = (product: Product, quantity = 1) => {
+  const addItem = useCallback((product: Product, quantity = 1) => {
     setItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
@@ -64,15 +64,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...prev, { product, quantity }];
     });
     setIsCartOpen(true);
-  };
+  }, []);
 
-  const removeItem = (productId: string) => {
+  const removeItem = useCallback((productId: string) => {
     setItems((prev) => prev.filter((item) => item.product.id !== productId));
-  };
+  }, []);
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = useCallback((productId: string, quantity: number) => {
     if (quantity <= 0) {
-      removeItem(productId);
+      setItems((prev) => prev.filter((item) => item.product.id !== productId));
       return;
     }
     setItems((prev) =>
@@ -80,38 +80,60 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         item.product.id === productId ? { ...item, quantity } : item
       )
     );
-  };
+  }, []);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setItems([]);
-  };
+    try {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    } catch (e) {
+      console.error("Error clearing cart storage", e);
+    }
+  }, []);
 
-  const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotalCOP = items.reduce(
-    (acc, item) => acc + item.product.price_cop * item.quantity,
-    0
+  const totalItems = useMemo(() => items.reduce((acc, item) => acc + item.quantity, 0), [items]);
+  const subtotalCOP = useMemo(
+    () => items.reduce((acc, item) => acc + item.product.price_cop * item.quantity, 0),
+    [items]
   );
 
   // Free shipping above $300.000 COP, otherwise standard $15.000 COP
-  const shippingCOP = items.length === 0 ? 0 : subtotalCOP >= 300000 ? 0 : 15000;
-  const totalCOP = subtotalCOP + shippingCOP;
+  const shippingCOP = useMemo(
+    () => (items.length === 0 ? 0 : subtotalCOP >= 300000 ? 0 : 15000),
+    [items.length, subtotalCOP]
+  );
+  const totalCOP = useMemo(() => subtotalCOP + shippingCOP, [subtotalCOP, shippingCOP]);
+
+  const contextValue = useMemo(
+    () => ({
+      items,
+      addItem,
+      removeItem,
+      updateQuantity,
+      clearCart,
+      totalItems,
+      subtotalCOP,
+      shippingCOP,
+      totalCOP,
+      isCartOpen,
+      setIsCartOpen,
+    }),
+    [
+      items,
+      addItem,
+      removeItem,
+      updateQuantity,
+      clearCart,
+      totalItems,
+      subtotalCOP,
+      shippingCOP,
+      totalCOP,
+      isCartOpen,
+    ]
+  );
 
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        totalItems,
-        subtotalCOP,
-        shippingCOP,
-        totalCOP,
-        isCartOpen,
-        setIsCartOpen,
-      }}
-    >
+    <CartContext.Provider value={contextValue}>
       {children}
     </CartContext.Provider>
   );
